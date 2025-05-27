@@ -1,0 +1,33 @@
+# Ignore test files
+tests/
+__tests__/
+*.test.ts
+*.spec.ts
+
+# Ignore benchmarks
+benchmarks/
+*.bench.ts
+
+# Ignore example code
+examples/
+
+# Ignore TypeScript source maps and build leftovers
+*.map
+*.tsbuildinfo
+
+# Ignore editor files
+.vscode/
+.idea/
+
+# Ignore config and metadata
+tsconfig.json
+vitest.config.ts
+pnpm-lock.yaml
+
+# Ignore dotfiles (optional)
+.env
+.*
+
+# Build output (assumed to be dist/)
+!dist/
+src/

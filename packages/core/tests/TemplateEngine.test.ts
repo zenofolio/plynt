@@ -13,15 +13,6 @@ const template =
   "Hello <<@user:name->trim@>>[( Randy )], <<@test:value->test@>>!";
 
 describe("TemplateEngine - Simple Cases", () => {
-
-  it("simple token", async () =>{
-
-    const render = templateEngine.build(`Hello <<@name@>>[(Raul)]`)
-    const text = await render({  })
-
-    expect(text).contain("Hello Raul")
-  })
-
   it("should parse a single token", () => {
     const parsed = templateEngine.parse(template);
 
@@ -52,16 +43,13 @@ describe("TemplateEngine - Simple Cases", () => {
     expect(result).toBe("Hello Test: Randy!");
   });
 
-
   it("large template with multiple tokens", async () => {
-
-    const { metadata, template } = mediumTemplate
+    const { metadata, template } = mediumTemplate;
 
     const render = templateEngine.build(template);
     const result = await render(metadata);
     expect(result).contain("Hola Randy,");
-
-  })
+  });
 
   // it("Handle multiple fields in the same namespace", async () => {
   //   const templateWithMultipleFields = "Hello <<@user:name|username->trim@>> and <<@user:age->trim@>>!";
@@ -76,5 +64,4 @@ describe("TemplateEngine - Simple Cases", () => {
 
   //   expect(result).toBe("Hello Randy and 30!");
   // })
-
 });

@@ -1,12 +1,19 @@
 import { ParsedFunction, ParsedToken } from "../types/template.types";
 
-export function tokenizeTemplate(input: string): ParsedToken[] {
+export function tokenizeTemplate(
+  input: string,
+  wrapper?: {
+    start?: string;
+    end?: string;
+  }
+): ParsedToken[] {
+  const { start = "<<@", end = "@>>" } = wrapper || {};
   const tokens: ParsedToken[] = [];
   let cursor = 0;
 
-  while ((cursor = input.indexOf("<<@", cursor)) !== -1) {
+  while ((cursor = input.indexOf(start, cursor)) !== -1) {
     const start = cursor;
-    const endToken = input.indexOf("@>>", start);
+    const endToken = input.indexOf(end, start);
     if (endToken === -1) break;
 
     const rawInner = input.slice(start + 3, endToken); // sin <<@ ni @>>

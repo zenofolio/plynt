@@ -8,16 +8,48 @@ import {
 } from "../types/template.types";
 import { tokenizeTemplate } from "../tokenizers/template.tokenizer";
 
-const DEDAULT_PATTERN =
-  /<<@(?:(?<namespace>[a-zA-Z_$][\w$]*)\:)?(?<key>[a-zA-Z_$][\w$]*)(?:->(?<fnChain>[a-zA-Z_$][\w$]*(?:->[a-zA-Z_$][\w$]*)*))?@>>(?:\[\((?<fallback>[^\)]*?)\)\])?/g;
-
 /**
- * TemplateEngine es el núcleo de Plynt.
- * Permite analizar, compilar y renderizar plantillas con transformaciones encadenadas, asincrónicas y cacheadas.
+ * PlyntEngine is a flexible and async-friendly template processor
+ * designed to parse and render dynamic strings using metadata.
+ *
+ * It supports:
+ * - Custom transformation functions (async or sync)
+ * - Strict mode for key validation
+ * - Fallback values for missing data
+ * - Advanced token parsing with chaining and arguments
+ *
+ * @example Basic usage:
+ *
+ * ```ts
+ * import { PlyntEngine } from "@plynt/core";
+ *
+ * const engine = new PlyntEngine({
+ *   functions: {
+ *     capitalize: async (val) =>
+ *       val.charAt(0).toUpperCase() + val.slice(1).toLowerCase(),
+ *   },
+ *   strict: true,
+ *   fallbackValue: "N/A",
+ *   onError: (error, context) => {
+ *     console.error("Error rendering template:", error, context);
+ *   },
+ * });
+ *
+ * const template = "Hello, <<@user:name->capitalize@>>!";
+ *
+ * const metadata = {
+ *   user: {
+ *     name: "john doe",
+ *   },
+ * };
+ *
+ * const rendered = await engine.render(template, metadata);
+ * console.log(rendered); // "Hello, John doe!"
+ * ```
  */
-export class TemplateEngine {
+
+export class PlyntEngine {
   private functions: Map<string, TransformFn>;
-  private pattern: RegExp;
   private options: TemplateEngineOptions;
 
   constructor(options?: TemplateEngineOptions) {
@@ -32,30 +64,50 @@ export class TemplateEngine {
       })
     );
 
-    this.pattern = options?.pattern || DEDAULT_PATTERN;
-
     this.options = options || {};
   }
 
   /**
-   * Registra una nueva función de transformación
+   * Adds a custom transformation function to the engine.
+   *
+   * @param name
+   * @param fn
    */
   public addFunction(name: string, fn: TransformFn): void {
     this.functions.set(name, fn);
   }
 
   /**
-   * Analiza la plantilla y retorna sus tokens como estructura reutilizable
+   * Retrieves a transformation function by name.
+   *
+   * @param name
+   * @returns
+   */
+  public getFunction(name: string): TransformFn | undefined {
+    return this.functions.get(name);
+  }
+
+  /**
+   * Parses a template string into a structured format.
+   *
+   * @param template
+   * @returns
    */
   public parse(template: string): ParsedTemplate {
-
-    const tokens: ParsedToken[] = tokenizeTemplate(template);
+    const tokens: ParsedToken[] = tokenizeTemplate(
+      template,
+      this.options.wrapper
+    );
 
     return new ParsedTemplate(template, tokens);
   }
 
   /**
-   * Devuelve una función de renderizado asíncrona lista para usar con metadata
+   * Builds a function that can render the template with provided metadata.
+   * This function is optimized for performance by caching results of previous token replacements.
+   *
+   * @param template The template string to build the rendering function for.
+   * @returns A function that takes metadata and returns a rendered string.
    */
   public build(
     template: string
@@ -115,7 +167,11 @@ export class TemplateEngine {
   }
 
   /**
-   * Renderiza directamente la plantilla con metadata
+   * Renders a template string using the provided metadata.
+   *
+   * @param template
+   * @param metadata
+   * @returns
    */
   public async render(
     template: string,
@@ -125,8 +181,32 @@ export class TemplateEngine {
   }
 
   /**
-   * Precompila la plantilla para render rápido y `.to()` reutilizable
+   * Converts a template string into a string using a replacer function.
+   *
+   * This method parses the template and replaces each token with the result of the replacer function.
+   *
+   * @example
+   * ```ts
+   * const engine = new PlyntEngine();
+   * const template = "Hello, <<@user:name->capitalize@>>!";
+   * const replacer = ({path}: ParsedToken) => `{{${path}}}`
+   * engine.to(template, replacer); // "Hello, {{user.name}}!"
+   * ```
+   *
    */
+  to(template: string, replacer: (token: ParsedToken) => string): string {
+    const parsed = this.parse(template);
+    return parsed.to(replacer);
+  }
+
+  /**
+   * Compiles a template into a render function.
+   * This allows for efficient rendering of the same template with different data.
+   *
+   * @param template The template string to compile.
+   * @returns An object containing the render function and a method to convert tokens to strings.
+   */
+
   public compile(template: string): {
     render: (data: Record<string, any>) => Promise<string>;
     to: ParsedTemplate["to"];

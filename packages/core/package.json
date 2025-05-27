@@ -1,19 +1,45 @@
 {
   "name": "@zenofolio/plynt",
   "version": "0.1.0",
+  "description": "A powerful async-friendly template engine for text rendering and campaigns",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
     }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "test": "vitest"
+    "test": "vitest",
+    "prepublishOnly": "pnpm build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zenofolio/plynt.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zenofolio/plynt/issues"
+  },
+  "homepage": "https://github.com/zenofolio/plynt#readme",
+  "keywords": [
+    "template",
+    "engine",
+    "text",
+    "render",
+    "async",
+    "dsl"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
   },
   "devDependencies": {
     "tsup": "^7.2.0",

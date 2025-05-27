@@ -16,20 +16,11 @@ export class ParsedTemplate {
    * @example
    * parsed.to((key, path) => `{{${path}}}`)
    */
-  public to(
-    replacer: (
-      key: string,
-      path: string,
-      raw: string,
-      token: ParsedToken
-    ) => string
-  ): string {
+  public to(replacer: (token: ParsedToken) => string): string {
     let result = this.template;
 
     for (const token of this.tokens) {
-      const key = token.path.split(".")[0];
-      const path = token.path;
-      const replacement = replacer(key, path, token.raw, token);
+      const replacement = replacer(token);
       result = result.replace(token.raw, replacement);
     }
 

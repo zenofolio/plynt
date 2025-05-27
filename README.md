@@ -20,7 +20,6 @@ Welcome to the monorepo for `@zenofolio/plynt`, a powerful and extensible templa
 - Multiple fallback keys (`<<@user:name|username@>>`)
 - Function parameters (`->truncate(10, "...")`)
 - Optional fallback values per token (`[(Fallback)]`)
-- High performance: over 400,000 renders/second
 - Designed for messaging, campaigns, and live systems
 
 ---
