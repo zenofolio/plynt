@@ -11,7 +11,7 @@
 - ✅ Allows **function parameters**: `->truncate(10, "...")`
 - ✅ Built-in **fallback support** per token: `[( Default )]`
 - ✅ Uses **namespace.key** syntax: `<<@user:name@>>`
-- ✅ Supports **multi-key fallback**: `<<@user:name|username@>>`
+- [ ] Supports **multi-key fallback**: `<<@user:name|username@>>`
 - ✅ Compile and reuse templates with `build()` and `compile()`
 - ✅ Fully text-based: no HTML, no DOM assumptions
 - ✅ Designed for **high-performance mass rendering**
