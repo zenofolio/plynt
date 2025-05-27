@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "name": "plynt-monorepo",
+  "version": "0.1.0",
+  "workspaces": ["packages/*"]
+}
