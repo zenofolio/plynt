@@ -1,5 +1,4 @@
-import { getValueFromMetadata } from "../helpers/getValueFromMetadata";
-import { normalizeFunctions } from "../helpers/normalizeFunctions";
+import { getValueFromMetadata } from "../helpers/get-value-from-metadata.helper";
 import { ParsedTemplate } from "./ParsedTemplate";
 import {
   ParsedToken,

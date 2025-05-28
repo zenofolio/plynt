@@ -1,6 +1,6 @@
 {
   "name": "@zenofolio/plynt",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A powerful async-friendly template engine for text rendering and campaigns",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
