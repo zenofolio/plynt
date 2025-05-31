@@ -40,7 +40,7 @@ export interface ParsedFunction {
 export type TransformFn = (
   input: string,
   ...args: string[]
-) => Promise<string> | string;
+) => Promise<string | number | object> | (string | number | object);
 
 /**
  * Represents a single token extracted from a template via `parse()`.
@@ -128,6 +128,9 @@ export interface TemplateEngineOptions {
      */
     end?: string;
   };
+
+
+  failbackPartner?: RegExp;
 
   /**
    * Error handler callback for missing keys, failed functions,

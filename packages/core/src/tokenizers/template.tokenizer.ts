@@ -2,10 +2,13 @@ import { ParsedFunction, ParsedToken } from "../types/template.types";
 
 export function tokenizeTemplate(
   input: string,
+
   wrapper?: {
     start?: string;
     end?: string;
-  }
+  },
+
+  failbackPartner: RegExp = /^\[\((.*?)\)\]/
 ): ParsedToken[] {
   const { start = "<<@", end = "@>>" } = wrapper || {};
   const tokens: ParsedToken[] = [];
@@ -23,7 +26,7 @@ export function tokenizeTemplate(
     let fallback: string | undefined;
     let finalEnd = endToken + 3;
 
-    const fallbackMatch = /^\[\((.*?)\)\]/.exec(input.slice(finalEnd));
+    const fallbackMatch = failbackPartner.exec(input.slice(finalEnd));
     if (fallbackMatch) {
       fallback = fallbackMatch[1];
       finalEnd += fallbackMatch[0].length;

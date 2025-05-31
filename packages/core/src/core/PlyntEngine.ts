@@ -6,6 +6,8 @@ import {
   TransformFn,
 } from "../types/template.types";
 import { tokenizeTemplate } from "../tokenizers/template.tokenizer";
+import { setValue } from "../helpers/set-value.helper";
+import applyFunctions from "../helpers/apply-functions";
 
 /**
  * PlyntEngine is a flexible and async-friendly template processor
@@ -95,7 +97,8 @@ export class PlyntEngine {
   public parse(template: string): ParsedTemplate {
     const tokens: ParsedToken[] = tokenizeTemplate(
       template,
-      this.options.wrapper
+      this.options.wrapper,
+      this.options.failbackPartner
     );
 
     return new ParsedTemplate(template, tokens);
@@ -123,7 +126,7 @@ export class PlyntEngine {
           continue;
         }
 
-        let value: string;
+        let value: any;
         try {
           const rawVal = getValueFromMetadata(token.path, metadata);
           if (rawVal == null || rawVal === undefined) {
@@ -180,6 +183,26 @@ export class PlyntEngine {
   }
 
   /**
+   * Extract metadata from the template.
+   * This method is a placeholder and should be implemented
+   *
+   */
+  public async metadata(template: string) {
+    const parsed = this.parse(template);
+    const metadata: Record<string, any> = {};
+
+
+    const cache = new Map<string, any>();
+
+    for (const token of parsed.tokens) {
+      const value = await applyFunctions(this, token, cache);
+      setValue(metadata, token.path, value);
+    }
+
+    return metadata;
+  }
+
+  /**
    * Converts a template string into a string using a replacer function.
    *
    * This method parses the template and replaces each token with the result of the replacer function.
@@ -209,12 +232,15 @@ export class PlyntEngine {
   public compile(template: string): {
     render: (data: Record<string, any>) => Promise<string>;
     to: ParsedTemplate["to"];
+    metadata: () => Promise<Record<string, any>>;
   } {
     const parsed = this.parse(template);
     const buildFn = this.build(template);
+    const metadata = this.metadata.bind(this, template);
     return {
       render: buildFn,
       to: parsed.to.bind(parsed),
+      metadata,
     };
   }
 }

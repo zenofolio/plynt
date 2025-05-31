@@ -1,6 +1,6 @@
 {
   "name": "@zenofolio/plynt",
-  "version": "0.1.1",
+  "version": "0.1.12",
   "description": "A powerful async-friendly template engine for text rendering and campaigns",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -19,6 +19,7 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "test": "vitest",
+    "bench": "vitest bench",
     "prepublishOnly": "pnpm build"
   },
   "repository": {
@@ -42,8 +43,8 @@
     "access": "public"
   },
   "devDependencies": {
-    "tsup": "^7.2.0",
+    "tsup": "8.5.0",
     "typescript": "^5.8.3",
-    "vitest": "^1.6.1"
+    "vitest": "3.1.4"
   }
 }

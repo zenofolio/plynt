@@ -1,5 +1,5 @@
 export const shortTemplate = {
-  template: `<@user:name->trim@>[( Randy )], <@test:value->test@>>!`,
+  template: `<@user:name->trim@>[( John )], <@test:value->test@>>!`,
   metadata: {
     user: {
       name: "Jose",
@@ -8,16 +8,16 @@ export const shortTemplate = {
 };
 
 export const mediumTemplate = {
-  template: `Hola <<@user:firstName->trim->capitalize@>>[(Amigo)], 
-Tu pedido <<@order:id@>> fue enviado a <<@order:address.line1->trim@>>.
+  template: `Hello <<@user:firstName->trim->capitalize@>>[(Friend)],
+Your order <<@order:id@>> was shipped to <<@order:address.line1->trim@>>.
 Total: <<@order:total->formatCurrency@>>.
-Método de pago: <<@order:payment.method@>>.
-Fecha de entrega: <<@order:deliveryDate->formatDate@>>.
-Si tienes dudas, responde a este mensaje o llama al <<@company:phone@>>.
-Gracias por elegirnos 💙
+Payment method: <<@order:payment.method@>>.
+Delivery date: <<@order:deliveryDate->formatDate@>>.
+If you have any questions, reply to this message or call <<@company:phone@>>.
+Thank you for choosing us 💙
 `.trim(),
   metadata: {
-    user: { firstName: "randy" },
+    user: { firstName: "jhon" },
     order: {
       id: "#123456",
       address: { line1: " Calle Principal 123 " },
